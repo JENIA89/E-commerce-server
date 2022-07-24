@@ -3,3 +3,4 @@
 - Express
 - Nodemon
 - JWT
+- Bcrypt.js
