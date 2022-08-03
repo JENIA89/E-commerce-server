@@ -1,3 +1,4 @@
+import { Secret } from 'jsonwebtoken';
 export {};
 
 declare global {
@@ -5,6 +6,7 @@ declare global {
     interface ProcessEnv {
       MONGO_DB_URL: string;
       PORT: number;
+      SECRET_KEY: Secret;
       ENV: 'test' | 'dev' | 'prod';
     }
   }
