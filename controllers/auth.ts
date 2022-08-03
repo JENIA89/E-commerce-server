@@ -1,9 +1,9 @@
-import express from 'express';
+import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 
-export const register = async (req: express.Request, res: express.Response) => {
+export const register = async (req: Request, res: Response) => {
   const { username, password, email } = req.body;
   try {
     const oldUser = await User.findOne({ email });
@@ -25,8 +25,39 @@ export const register = async (req: express.Request, res: express.Response) => {
       { expiresIn: '7d' }
     );
 
-    res.status(200).json({ newUser, token });
+    res
+      .cookie('access_token', token, { httpOnly: true })
+      .status(200)
+      .json({ newUser, token });
   } catch (error) {
-    console.log();
+    console.log(error);
+  }
+};
+
+export const login = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
+  try {
+    const oldUser = await User.findOne({ username });
+    if (!oldUser) {
+      return res.status(404).json({ message: 'User doesn"t exists' });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
+    if (!isPasswordCorrect) {
+      return res.status(404).json({ message: 'Invalid password or username' });
+    }
+
+    const token = jwt.sign(
+      { id: oldUser._id },
+      process.env.SECRET_KEY as string,
+      { expiresIn: '7d' }
+    );
+
+    res
+      .cookie('access_token', token, { httpOnly: true })
+      .status(200)
+      .json(oldUser);
+  } catch (error) {
+    console.log(error);
   }
 };
