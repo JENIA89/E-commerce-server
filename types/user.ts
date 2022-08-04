@@ -11,5 +11,4 @@ export interface IUser extends Document {
 
 export interface IUserAuthInfoRequest extends Request {
   userId: string;
-  _id: string | JwtPayload;
 }
