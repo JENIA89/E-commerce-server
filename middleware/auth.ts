@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { IUserAuthInfoRequest } from '../types/user';
-import { errorHandler } from './error';
+import { errorHandler } from '../utils/errorHandler';
 
 export const authCheck = async (
   req: IUserAuthInfoRequest,
