@@ -1,9 +1,13 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { username, password, email } = req.body;
   try {
     const oldUser = await User.findOne({ email });
@@ -30,11 +34,15 @@ export const register = async (req: Request, res: Response) => {
       .status(200)
       .json({ newUser, token });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { username, password } = req.body;
   try {
     const oldUser = await User.findOne({ username });
@@ -58,6 +66,6 @@ export const login = async (req: Request, res: Response) => {
       .status(200)
       .json(oldUser);
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
