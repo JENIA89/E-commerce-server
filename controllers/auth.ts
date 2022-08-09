@@ -6,7 +6,7 @@ import User from '../models/User';
 export const register = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const { username, password, email } = req.body;
   try {
@@ -26,7 +26,7 @@ export const register = async (
     const token = jwt.sign(
       { id: newUser._id },
       process.env.SECRET_KEY as string,
-      { expiresIn: '7d' }
+      { expiresIn: '7d' },
     );
 
     res
@@ -41,7 +41,7 @@ export const register = async (
 export const login = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const { username, password } = req.body;
   try {
@@ -58,13 +58,10 @@ export const login = async (
     const token = jwt.sign(
       { id: oldUser._id },
       process.env.SECRET_KEY as string,
-      { expiresIn: '7d' }
+      { expiresIn: '7d' },
     );
 
-    res
-      .cookie('access_token', token, { httpOnly: true })
-      .status(200)
-      .json(oldUser);
+    res.status(200).json({ oldUser, token });
   } catch (error) {
     next(error);
   }
