@@ -24,6 +24,7 @@
         "allowSingleExtends": true
       }
     ],
+    "@typescript-eslint/no-explicit-any": "off",
     "quotes": ["error", "single"],
     "linebreak-style": 0,
     "no-console": ["error", { "allow": ["log"] }],
