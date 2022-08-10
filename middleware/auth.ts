@@ -6,22 +6,20 @@ import { errorHandler } from '../utils/errorHandler';
 export const authCheck = async (
   req: IUserAuthInfoRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  const token = req.cookies.access_token;
+  const token = (req.headers.authorization || '').replace(/Bearer\s?/, '');
 
-  try {
-    if (!token) {
-      return next(errorHandler(401, 'You are not authenticated!'));
+  if (token) {
+    try {
+      const { id } = jwt.verify(
+        token,
+        process.env.SECRET_KEY as string,
+      ) as JwtPayload;
+      req.userId = id;
+      next();
+    } catch (error) {
+      next(errorHandler(401, 'You are not authenticated!'));
     }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.SECRET_KEY as string
-    ) as JwtPayload;
-    req.userId = decoded?._id;
-    next();
-  } catch (error) {
-    next(error);
   }
 };

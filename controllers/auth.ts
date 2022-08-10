@@ -29,10 +29,7 @@ export const register = async (
       { expiresIn: '7d' },
     );
 
-    res
-      .cookie('access_token', token, { httpOnly: true })
-      .status(200)
-      .json({ newUser, token });
+    res.status(200).json({ newUser, token });
   } catch (error) {
     next(error);
   }
@@ -62,6 +59,19 @@ export const login = async (
     );
 
     res.status(200).json({ oldUser, token });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const profile = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User doesn"t exists' });
+    }
+
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }

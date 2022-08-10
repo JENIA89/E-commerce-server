@@ -1,6 +1,5 @@
 import { Document } from 'mongoose';
 import { Request } from 'express';
-import { JwtPayload } from 'jsonwebtoken';
 export interface IUser extends Document {
   username: string;
   email: string;
@@ -10,5 +9,6 @@ export interface IUser extends Document {
 }
 
 export interface IUserAuthInfoRequest extends Request {
-  userId: string;
+  userId?: string;
+  _id?: string;
 }
