@@ -3,6 +3,7 @@ import express, { Request, Response, NextFunction, Application } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import morgan from 'morgan';
 import authRoute from './routes/auth';
 import { ResponseError } from './types/error';
 
@@ -18,9 +19,11 @@ const connect = async () => {
   }
 };
 
-app.use(cors());
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ limit: '30mb', extended: true }));
+app.use(cors());
 
 app.use('/auth', authRoute);
 
@@ -34,7 +37,7 @@ app.use(
       message: errorMessage,
       stack: err.stack,
     });
-  }
+  },
 );
 
 app.listen(process.env.PORT, () => {
